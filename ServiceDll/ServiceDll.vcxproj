@@ -154,6 +154,8 @@
   <ItemGroup>
     <ClInclude Include="src\Network.h" />
     <ClInclude Include="src\NetworkException.h" />
+    <ClInclude Include="src\Server.h" />
+    <ClInclude Include="src\ServerOptions.h" />
     <ClInclude Include="src\UDPSender.h" />
     <ClInclude Include="src\UDPReceiver.h" />
     <ClInclude Include="src\Util.h" />
@@ -162,6 +164,7 @@
     <ClCompile Include="src\Network.cpp" />
     <ClCompile Include="src\NetworkException.cpp" />
     <ClCompile Include="src\Server.cpp" />
+    <ClCompile Include="src\ServerOptions.cpp" />
     <ClCompile Include="src\UDPSender.cpp" />
     <ClCompile Include="src\UDPReceiver.cpp" />
     <ClCompile Include="src\Util.cpp" />

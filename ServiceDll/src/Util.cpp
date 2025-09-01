@@ -1,4 +1,7 @@
 #include "Util.h"
+
+#include <Windows.h>
+
 int ReadJSON(const std::string& buff, std::unordered_map<std::string, std::string>& input) {
 	int i = 0;
 	char ch = buff[i];

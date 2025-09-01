@@ -1,4 +1,3 @@
-
 #include "NetworkException.h"
 
 NetworkException::NetworkException(std::string message, std::string file, int line)

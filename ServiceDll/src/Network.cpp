@@ -1,9 +1,12 @@
-#include "Network.h"
 #pragma comment(lib, "Ws2_32.lib")
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
+#include "Network.h"
+
 #include <iostream>
+#include <WinSock2.h>
+#include <WS2tcpip.h>
 #include <Windows.h>
-
-
 
 bool GetMyIP(struct IPv4& myIP)
 {

@@ -2,20 +2,15 @@
 #include "UDPSender.h"
 #include "UDPReceiver.h"
 #include "Util.h"
-#include <Windows.h>
-#include <WinUser.h>
+#include "Server.h"
+#include "ServerOptions.h"
+
 #include <iostream>
 #include <thread>
 #include <cmath>
-
-
-
-
-#define ECHO_PORT 5560
-#define SERVER_PORT 5559
-
-void EchoThread();
-void ServerThread();
+#include <Windows.h>
+#include <WinUser.h>
+#include <unordered_map>
 
 void ServerThread() {
 	UDPReceiver server(SERVER_PORT);
@@ -92,7 +87,7 @@ void ServerThread() {
 void EchoThread() {
 	struct IPv4 ip;
 	if (!GetMyIP(ip)) {
-		//LOG_ERR;
+		LOG_ERR;
 		throw NetworkException("Failed to get Local IP", __FILE__, __LINE__);
 	}
 
@@ -107,15 +102,29 @@ void EchoThread() {
 			LOG_ERR;
 			throw NetworkException("Failed to get Local IP", __FILE__, __LINE__);
 		}
+
 		IPv4 broadCast = ip;
 		broadCast.s_b4 = 255;
 
-		echo.Send((const char*)&ip, 4,broadCast);
+		echo.Send((const char*)&ip, 4, broadCast);
 		Sleep(3000);
 		std::cout << (int)ip.s_b1 << " " << (int)ip.s_b2 << " " << (int)ip.s_b3 << " " << (int)ip.s_b4 << std::endl;
 	}
+}
 
+void EchoThreadA(IPv4 ip) {
+	IPv4 broadCast = ip;
+	broadCast.s_b4 = 255;
+
+	UDPSender echo(broadCast, ECHO_PORT);
+	std::cout << (int)ip.s_b1 << " " << (int)ip.s_b2 << " " << (int)ip.s_b3 << " " << (int)ip.s_b4 << std::endl;
+
+	while (true)
+	{
+		echo.Send((const char*)&ip, 4, broadCast);
+		Sleep(3000);
 	}
+}
 
 #ifdef NDEBUG
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
@@ -124,7 +133,44 @@ int main(int argc, char** argv)
 #endif // NDEBUG
 
 {
-	std::thread echo(EchoThread);
+	std::thread echo;
+
+	/// Parse Command Line Arguments
+	if (CmdOptionExists(argv, argv + argc, "-h"))
+	{
+		std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
+		std::cout << "Options:" << std::endl;
+		std::cout << "\t-h\t\t: Show this help message" << std::endl;
+		std::cout << "\t-a <IP Address>\t: IP Address to send Echo Packets" << std::endl;
+		/*std::cout << "\t-p <Port>\t: Port to listen for UDP Packets" << std::endl;
+		std::cout << "\t\t\t  Default: " << SERVER_PORT << std::endl;*/
+		return 0;
+	}
+	
+	// -a <IP Address> : IP Address to send Echo Packets
+	char* adrs = GetCmdOption(argv, argv + argc, "-a");
+	if (adrs != 0)
+	{
+		struct IPv4 ip;
+		std::string str(adrs);
+
+		int pos = str.find('.');
+		ip.s_b1 = std::stoi(str.substr(0, pos));
+		str.erase(0, pos + 1);
+		pos = str.find('.');
+		ip.s_b2 = std::stoi(str.substr(0, pos));
+		str.erase(0, pos + 1);
+		pos = str.find('.');
+		ip.s_b3 = std::stoi(str.substr(0, pos));
+		str.erase(0, pos + 1);
+		ip.s_b4 = std::stoi(str);
+
+		echo = std::thread(EchoThreadA, ip);
+	}
+	else {
+		echo = std::thread(EchoThread);
+	}
+
 	std::thread server(ServerThread);
 
 	server.join();

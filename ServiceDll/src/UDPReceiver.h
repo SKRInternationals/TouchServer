@@ -1,6 +1,10 @@
 #pragma once
 #include "Network.h"
 
+#include <WinSock2.h>
+
+#define DEFAULT_PORT 10117
+
 class UDPReceiver
 {
 private:
@@ -11,10 +15,8 @@ private:
     int addrSize;
 
 public:
-    UDPReceiver();
-    UDPReceiver(unsigned short int port);
-    UDPReceiver(IPv4 ip);
-    UDPReceiver(IPv4 ip, unsigned short int port);
+    UDPReceiver(unsigned short int port = DEFAULT_PORT);
+    UDPReceiver(IPv4 ip, unsigned short int port = DEFAULT_PORT);
     ~UDPReceiver();
 
 public:
