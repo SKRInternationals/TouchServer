@@ -1,72 +1,87 @@
 # TouchServer
 
-- TouchServer is part of [TouchDroid](https://www.github.com/Akshayaap/TouchDroid). This is Linux/Windows Server to capture data from the Network sent by TouchDroid Application and Register Appropreate Events to the Operating System. 
-- Repositoty to Android Application is [Here](https://www.github.com/Akshayaap/TouchDroid).
+TouchServer is part of [TouchDroid](https://github.com/SKRInternationals/TouchDroid).  
+It captures input sent from the TouchDroid Android app over the network and registers them as mouse/keyboard events on Windows or Linux.
 
-  ## Table of Content
-  - [Technologies](#technologies)
-  - [Setup](#setup)
-  - [Working](#working)
-  
-  ## Technologies
-  ### For Desktop Server Applicarion
-  - C++.
-  - C#.
-  
-  ## Setup
-  ### For Users
-  - Download the zip file.
-  - Install android [TouchDroid](https://www.github.com/Akshayaap/TouchDroid) apk.
-  - Extract MouseRemoteServer.zip at your favorite location in your Windows PC.
-  - Run `UI.exe`.
-  - Now you will be able to control Server.
-  - Open MouseRemote application in android.
-  - The app will connect to server automatically.
-  <br/><br/>
-  Note: **The mobile and server must be in same network**
-  For More See: [Documentation](https://www.github.com/Akshayaap/Documentation).
-  
-  ## Working (Windows)
-  How the program works:-
-  - Press `Start` from Desktop-GUI to start.
-  - Press `Stop` from Desktop-GUI to stop.
-  - You can then Easily control your Computer by using your phone as touchpad.
+📱 Android app repo: [TouchDroid](https://github.com/SKRInternationals/TouchDroid)
 
-  ## Working (Linux)
+---
 
-  - Install python using `sudo apt-get install python3.8`.
-  - Open terminal in **linux** folder.
-  - Use `sudo python3 -m pip install -r requirements.txt` to install all required libraries.
-  - Run **main.py** file and control your linux device.
-    **_Note:-_** _Cursor might not move on some linux distros. Under progress_
+## Table of Contents
 
-  ### Hyprland
+- [Technologies](#technologies)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Troubleshooting](#troubleshooting)
 
-  - Install [ydotool](https://man.archlinux.org/man/ydotool.1.en):
-    > - arch linux:
-    >
-    > `sudo pacman -S ydotool`
-  - Run **ydotool**:
-    > `sudo ydotoold &`
-  - Open terminal in **linux** folder.
-  - Run **main_hyprland.py** file and control your Linux device
-    > `python main_hyprland.py`
+---
 
-  ### Keyboard Problem?
+## Technologies
 
-  - Open terminal in `./linux/keys`
-  - Run `python export_system_keys.py`
-  - Try running `./linux/main_hyprland.py` again
+- **Windows / Desktop**: C++, C#
+- **Linux**: Python (3.8+), [ydotool](https://man.archlinux.org/man/ydotool.1.en)
 
-  - (i hope u not need to read this section below)
-  - If still not works try :
-    > - Edit `./linux/main_hyprland.py`:
-    > - find "HERE TO FIX YOUR PROBLEM" and uncomment one line under that
-    > - find `# HERE U START COMMENTING` and start commenting
-    > - until u reach to the `# HERE U END COMMENTING`
-    > - save and run the `./linux/main_hyprland.py` file
-    > - edit `./linux/keys/app_keys.py` and replce every "key" in dictionary
-    > - save the file and ...
-    > - **you should undo comment/uncomment after alll**
+---
 
+## Setup
 
+### Windows
+
+1. Download and extract **MouseRemoteServer.zip**.
+2. Run `UI.exe`.
+3. Install the [TouchDroid APK](https://github.com/SKRInternationals/TouchDroid) on your phone.
+4. Ensure both phone and PC are on the **same network**.
+5. Open the Android app → and Select your Host device to connect
+
+---
+
+### Linux
+
+1. Install Python 3.8+:
+   ```bash
+   sudo apt-get install python3.8
+   ```
+2. Install dependencies:
+   ```bash
+   sudo python3 -m pip install -r requirements.txt
+   ```
+3. Run the server:
+   ```bash
+   python main.py
+   ```
+
+⚠️ On some distros the cursor may not move properly (work in progress).
+
+#### Hyprland Support
+
+1. Install and run **ydotool**:
+   ```bash
+   sudo pacman -S ydotool
+   sudo ydotoold &
+   ```
+2. Start the server:
+   ```bash
+   python main_hyprland.py
+   ```
+
+---
+
+## Usage
+
+- From the Windows GUI:
+  - `Start` → Enable server
+  - `Stop` → Disable server
+- On Linux: Run the respective Python script.
+- Control your desktop using your phone like a touchpad.
+
+---
+
+## Troubleshooting
+
+- **Keyboard input issues (Linux/Hyprland):**
+  ```bash
+  cd ./linux/keys
+  python export_system_keys.py
+  ```
+- If keys still don’t map correctly, edit `./linux/keys/app_keys.py` with your system’s key mappings.
+- Advanced users: see inline comments in `main_hyprland.py` for manual fix options.
